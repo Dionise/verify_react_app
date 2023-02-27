@@ -20,9 +20,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             validate_password(password, user)
         except exceptions.ValidationError as e:
             serializer_errors = serializers.as_serializer_error(e)
-            raise exceptions.ValidationError(
-                {'password': serializer_errors['non_field_errors']}
-            )
+            self.errors = {'password': serializer_errors['non_field_errors']}
 
         return data
 
@@ -38,6 +36,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         errors = getattr(self, 'errors', None)
+
         if errors:
             representation['errors'] = errors
         return representation

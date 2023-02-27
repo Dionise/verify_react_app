@@ -18,6 +18,14 @@ const RegisterScreen = () => {
     return state.user.loading
   })
 
+  const error = useSelector(state => {
+    return state.user.error
+  })
+
+  const user = useSelector(state => {
+    return state.user
+  })
+
   const handleRegister = () => {
     if (password !== confirmPassword) {
       alert("Passwords don't match")
@@ -72,6 +80,7 @@ const RegisterScreen = () => {
         onChangeText={setConfirmPassword}
       />
       <Button title="Register" onPress={handleRegister} disabled={loading} />
+      {error && <Text style={resetScreenStyles.error}>{error}</Text>}
       <TouchableOpacity
         style={resetScreenStyles.navButton}
         onPress={() => navigation.navigate('Login')}>

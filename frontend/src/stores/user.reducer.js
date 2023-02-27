@@ -3,7 +3,15 @@ import {
   createAsyncThunk,
   createEntityAdapter
 } from '@reduxjs/toolkit'
-import { getUser, registerUser } from '../api/ApiUser'
+import {
+  getUser,
+  registerUser,
+  loginUser,
+  logoutUser,
+  checkAuthentication,
+  resetPassword,
+  resetPasswordConfirmations
+} from '../api/ApiUser'
 
 export const fetchUser = createAsyncThunk('user/getUser', async () => {
   const response = await getUser()
@@ -15,6 +23,84 @@ export const register = createAsyncThunk(
   async ({ firstName, lastName, email, password }, thunkAPI) => {
     try {
       const response = await registerUser(firstName, lastName, email, password)
+      return response
+    } catch (err) {
+      const { detail } = err.response.data
+      const fieldErrors = {}
+      Object.keys(detail).forEach(key => {
+        const error = detail[key][0]
+        switch (key) {
+          case 'email':
+            fieldErrors.email = error
+            break
+          case 'password':
+            fieldErrors.password = error
+            break
+          case 'first_name':
+            fieldErrors.firstName = error
+            break
+          case 'last_name':
+            fieldErrors.lastName = error
+            break
+          default:
+            break
+        }
+      })
+      return thunkAPI.rejectWithValue(fieldErrors)
+    }
+  }
+)
+
+export const login = createAsyncThunk(
+  'users/login/',
+  async ({ email, password }, thunkAPI) => {
+    try {
+      const response = await loginUser(email, password)
+      return response
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message)
+    }
+  }
+)
+
+export const logout = createAsyncThunk('users/logout/', async thunkAPI => {
+  try {
+    const response = await logoutUser()
+    return response
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.message)
+  }
+})
+
+export const checkAuth = createAsyncThunk(
+  'users/verify',
+  async (_, thunkAPI) => {
+    try {
+      const response = await checkAuthentication()
+      return response
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message)
+    }
+  }
+)
+
+export const sendResetPassword = createAsyncThunk(
+  'users/sendResetPassword/',
+  async ({ email }, thunkAPI) => {
+    try {
+      const response = await resetPassword(email)
+      return response
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message)
+    }
+  }
+)
+
+export const resetPasswordConfirmation = createAsyncThunk(
+  'users/resetPasswordConfirmation/',
+  async ({ token, password }, thunkAPI) => {
+    try {
+      const response = await resetPasswordConfirmations(token, password)
       return response
     } catch (err) {
       return thunkAPI.rejectWithValue(err.message)
@@ -31,7 +117,8 @@ const userSlice = createSlice({
     user: null,
     loading: false,
     registered: false,
-    error: null
+    error: null,
+    token: null
   }),
   reducers: {
     resetRegistered: state => {
@@ -40,15 +127,10 @@ const userSlice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(fetchUser.pending, (state, action) => {
-        state.isLoading = true
-      })
+      // Add this case to handle the `fetchUser` action
       .addCase(fetchUser.fulfilled, (state, action) => {
-        userAdapter.setAll(state, action.payload)
-        state.isLoading = false
-      })
-      .addCase(fetchUser.rejected, state => {
-        state.isLoading = false
+        state.user = action.payload
+        state.isAuthenticated = true
       })
       .addCase(register.pending, state => {
         state.loading = true
@@ -60,6 +142,19 @@ const userSlice = createSlice({
         state.isAuthenticated = true
       })
       .addCase(register.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      .addCase(login.pending, state => {
+        state.loading = true
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false
+        state.isAuthenticated = true
+        state.user = action.payload.user
+        state.token = action.payload.access
+      })
+      .addCase(login.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
       })

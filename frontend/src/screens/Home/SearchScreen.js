@@ -13,6 +13,7 @@ const SearchScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const users = useSelector(selectAll)
+  console.log(users)
 
   const handleSearch = () => {
     // Make API request to find property details based on address
