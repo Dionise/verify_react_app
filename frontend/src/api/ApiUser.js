@@ -21,10 +21,6 @@ export const registerUser = async (firstName, lastName, email, password) => {
       credentials: 'include'
     }
   )
-  console.log(csrfResponse)
-
-  const csrfToken = csrfResponse.headers.get('X-CSRFToken')
-  console.log(csrfToken)
 
   // Send the registration request with the CSRF token included
   const body = JSON.stringify({
@@ -39,7 +35,7 @@ export const registerUser = async (firstName, lastName, email, password) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken
+        'X-CSRFToken': csrfResponse.headers.get('X-CSRFToken')
       },
       body: body,
       credentials: 'include'
@@ -54,8 +50,9 @@ export const registerUser = async (firstName, lastName, email, password) => {
 
     return responseData
   } catch (error) {
-    console.log('Registration request error:', error)
-    throw error
+    console.error('Registration request error:', error)
+    const errorMessage = error.message || 'Registration failed'
+    throw new Error(errorMessage)
   }
 }
 

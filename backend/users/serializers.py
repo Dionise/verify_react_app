@@ -6,6 +6,7 @@ from users.models import *
 User = get_user_model()
 
 
+
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -33,6 +34,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
         )
         return user
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        errors = getattr(self, 'errors', None)
+        if errors:
+            representation['errors'] = errors
+        return representation
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
