@@ -10,7 +10,6 @@ const LoginScreen = () => {
 
   const handleLogin = () => {
     // Make API request to log in user
-    // ...
 
     // Navigate to HomeScreen
     navigation.navigate('Search')

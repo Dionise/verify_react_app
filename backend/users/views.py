@@ -5,6 +5,21 @@ from .permissions import AllowReadUsersAuthenticatedUser
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from rest_framework import generics
+
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_GET
+from django.http import JsonResponse
+
+
+
+
+
+@require_GET
+@ensure_csrf_cookie
+def csrf_token(request):
+    return JsonResponse({'csrf_token': get_token(request)})
+
+
 from .serializers import (UserCreateSerializer,
                           UserSerializer,
                           ChangePasswordSerializer,

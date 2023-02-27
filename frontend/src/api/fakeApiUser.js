@@ -1,5 +1,4 @@
-//example api request: replace with your API request here in folder API
-import CookieManager from '@react-native-cookies/cookies'
+///import { getCookie } from 'react-native-csrf'
 
 export const getUser = () => {
   try {
@@ -25,7 +24,9 @@ export const registerUser = async (firstName, lastName, email, password) => {
     password: password
   })
 
-  await CookieManager.clearAll()
+  const csrfToken = await getCookie(
+    'http://127.0.0.1:8000/api/users/csrf_token/'
+  )
 
   const response = await fetch('http://127.0.0.1:8000/api/users/register/', {
     method: 'POST',

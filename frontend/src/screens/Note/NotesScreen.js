@@ -9,45 +9,10 @@ const NotesScreen = () => {
   const route = useRoute()
   const { address } = route.params?.address || {}
 
-  const fetchNotes = async () => {
-    setIsFetching(true)
-    try {
-      const response = await fetch(
-        `https://your-drf-api.com/notes?address=${address}`
-      )
-      const data = await response.json()
-      if (data.length === 0) {
-        setNotes([])
-      } else {
-        setNotes(data)
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setIsFetching(false)
-    }
-  }
-
   const handleAddNote = async () => {
-    try {
-      const response = await fetch('https://your-drf-api.com/notes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ address, note: newNote })
-      })
-      const data = await response.json()
-      setNotes(notes.concat(data))
-      setNewNote('')
-    } catch (error) {
-      console.error(error)
-    }
+    // eslint-disable-next-line no-console
+    console.log(newNote)
   }
-
-  useEffect(() => {
-    fetchNotes()
-  }, [])
 
   return (
     <View>
@@ -57,7 +22,6 @@ const NotesScreen = () => {
         renderItem={({ item }) => <Text>{item.note}</Text>}
         keyExtractor={item => item.id.toString()}
         refreshing={isFetching}
-        onRefresh={fetchNotes}
       />
       <TextInput
         style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
