@@ -53,7 +53,7 @@ export const loginUser = async (email, password) => {
     return responseData
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Login request error:', error)
+
     const errorMessage = error.message || 'Login failed'
     throw new Error(errorMessage)
   }

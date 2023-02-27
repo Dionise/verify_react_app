@@ -10,15 +10,33 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [emailFocused, setEmailFocused] = useState(false)
+  const [passwordFocused, setPasswordFocused] = useState(false)
+
+  const handleEmailChange = text => {
+    setEmail(text)
+    setErrorMessage(null)
+  }
+
+  const handlePasswordChange = text => {
+    setPassword(text)
+    setErrorMessage(null)
+  }
 
   const handleLogin = () => {
     dispatch(login({ email, password }))
-      .then(() => {
-        navigation.navigate('Search')
+      .then(response => {
+        if (response.payload.token) {
+          navigation.navigate('Search')
+        } else {
+          // Display error message to user
+          setErrorMessage('Invalid email or password')
+        }
       })
       .catch(error => {
-        console.log(error)
         // Display error message to user
+        setErrorMessage('Invalid email or password')
       })
   }
 
@@ -28,21 +46,26 @@ const LoginScreen = () => {
         style={resetScreenStyles.input}
         placeholder="Enter email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={handleEmailChange}
       />
       <TextInput
         style={resetScreenStyles.input}
         placeholder="Enter password"
         value={password}
         secureTextEntry
-        onChangeText={setPassword}
+        onChangeText={handlePasswordChange}
       />
+
+      {errorMessage && (
+        <Text style={resetScreenStyles.error}>{errorMessage}</Text>
+      )}
       <Button title="Log in" onPress={handleLogin} />
       <TouchableOpacity
         style={resetScreenStyles.navButton}
         onPress={() => navigation.navigate('Register')}>
         <Text>Don't have an account? Register here.</Text>
       </TouchableOpacity>
+
       <TouchableOpacity
         style={resetScreenStyles.navButton}
         onPress={() => navigation.navigate('Reset')}>

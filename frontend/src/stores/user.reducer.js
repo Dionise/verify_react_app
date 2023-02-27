@@ -87,6 +87,8 @@ export const checkAuth = createAsyncThunk(
 export const sendResetPassword = createAsyncThunk(
   'users/sendResetPassword/',
   async ({ email }, thunkAPI) => {
+    console.log(email)
+    console.log('okoko')
     try {
       const response = await resetPassword(email)
       return response

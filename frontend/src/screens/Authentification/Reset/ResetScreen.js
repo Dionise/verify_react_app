@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { View, TextInput, Button, Text } from 'react-native'
-import { resetScreenStyles } from '../Comon.Style'
 
-import { sendResetPassword } from '@stores/user.reducer'
+import { sendResetPassword } from '../../../stores/user.reducer.js'
+import { resetScreenStyles } from '../Comon.Style'
 
 const ResetScreen = () => {
   const [email, setEmail] = useState('')
@@ -11,6 +11,7 @@ const ResetScreen = () => {
   const [error, setError] = useState('')
 
   const handleSubmit = async () => {
+    console.log(email)
     try {
       await sendResetPassword({ email })
       setSubmitted(true)
