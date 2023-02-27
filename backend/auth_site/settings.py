@@ -136,3 +136,19 @@ EMAIL_BACKEND = 'django_ses.SESBackend'
 
 
 
+
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+
+CSRF_COOKIE_NAME = 'X-CSRFTOKEN'
+
+CORS_ALLOW_HEADERS = [
+    'X-CSRFTOKEN',
+    'csrftoken',
+    'X-XSRF-TOKEN',
+    'content-type',
+    'x-requested-with',
+    'Authorization',
+    'Set-Cookie'
+]
+
+CORS_ALLOW_CREDENTIALS = True

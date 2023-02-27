@@ -1,4 +1,5 @@
 //example api request: replace with your API request here in folder API
+import CookieManager from '@react-native-cookies/cookies'
 
 export const getUser = () => {
   try {
@@ -24,7 +25,9 @@ export const registerUser = async (firstName, lastName, email, password) => {
     password: password
   })
 
-  const response = await fetch('https://example.com/api/users/register', {
+  await CookieManager.clearAll()
+
+  const response = await fetch('http://127.0.0.1:8000/api/users/register/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -34,6 +37,7 @@ export const registerUser = async (firstName, lastName, email, password) => {
 
   if (!response.ok) {
     const errorData = await response.json()
+
     throw new Error(errorData.detail)
   }
 

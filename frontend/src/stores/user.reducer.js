@@ -11,7 +11,7 @@ export const fetchUser = createAsyncThunk('user/getUser', async () => {
 })
 
 export const register = createAsyncThunk(
-  'users/register',
+  'users/register/',
   async ({ firstName, lastName, email, password }, thunkAPI) => {
     try {
       const response = await registerUser(firstName, lastName, email, password)
