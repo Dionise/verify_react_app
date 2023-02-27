@@ -23,7 +23,6 @@ export const register = createAsyncThunk(
 )
 
 const userAdapter = createEntityAdapter()
-
 const userSlice = createSlice({
   name: 'user',
   initialState: userAdapter.getInitialState({

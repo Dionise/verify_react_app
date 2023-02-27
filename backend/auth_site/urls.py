@@ -4,6 +4,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from users.views import ChangePasswordView, ChangeEmailView, ChangeFirstandLastView
 from django.conf import settings  # new
 from django.conf.urls.static import static  # new
+from django.urls import path
+
 
 urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view()),
@@ -22,6 +24,7 @@ urlpatterns = [
 
     path('api-auth/', include('rest_framework.urls')),
     path('api/users/', include('users.urls')),
+   
    
 ]
 if settings.DEBUG:

@@ -1,5 +1,3 @@
-///import { getCookie } from 'react-native-csrf'
-
 export const getUser = () => {
   try {
     return Promise.resolve({
@@ -17,6 +15,18 @@ export const getUser = () => {
 }
 
 export const registerUser = async (firstName, lastName, email, password) => {
+  const csrfResponse = await fetch(
+    'http://127.0.0.1:8000/api/users/csrf_token/',
+    {
+      credentials: 'include'
+    }
+  )
+  console.log(csrfResponse)
+
+  const csrfToken = csrfResponse.headers.get('X-CSRFToken')
+  console.log(csrfToken)
+
+  // Send the registration request with the CSRF token included
   const body = JSON.stringify({
     first_name: firstName,
     last_name: lastName,
@@ -24,26 +34,29 @@ export const registerUser = async (firstName, lastName, email, password) => {
     password: password
   })
 
-  const csrfToken = await getCookie(
-    'http://127.0.0.1:8000/api/users/csrf_token/'
-  )
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/users/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: body,
+      credentials: 'include'
+    })
 
-  const response = await fetch('http://127.0.0.1:8000/api/users/register/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: body
-  })
+    const responseData = await response.json()
 
-  if (!response.ok) {
-    const errorData = await response.json()
+    if (!response.ok) {
+      const errorData = responseData
+      throw new Error(errorData.detail)
+    }
 
-    throw new Error(errorData.detail)
+    return responseData
+  } catch (error) {
+    console.log('Registration request error:', error)
+    throw error
   }
-
-  const responseData = await response.json()
-  return responseData
 }
 
 module.exports = {

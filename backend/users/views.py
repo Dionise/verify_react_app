@@ -5,13 +5,10 @@ from .permissions import AllowReadUsersAuthenticatedUser
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from rest_framework import generics
-
+from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET
 from django.http import JsonResponse
-
-
-
 
 
 @require_GET
