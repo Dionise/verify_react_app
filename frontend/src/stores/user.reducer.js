@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter
 } from '@reduxjs/toolkit'
-import { getUser, registerUser } from '../api/fakeApiUser'
+import { getUser, registerUser } from '../api/ApiUser'
 
 export const fetchUser = createAsyncThunk('user/getUser', async () => {
   const response = await getUser()
