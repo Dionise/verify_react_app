@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TextInput, TouchableOpacity, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUser, selectAll } from '../../stores/user.reducer'
+import { fetchUser, selectUser } from '../../stores/user.reducer'
 
 import { searchScreenStyles } from './style'
 
@@ -12,8 +12,12 @@ const SearchScreen = () => {
   const [address, setAddress] = useState('')
   const navigation = useNavigation()
   const dispatch = useDispatch()
-  const users = useSelector(selectAll)
-  console.log(users)
+  const user = useSelector(selectUser)
+  console.log(user)
+
+  useEffect(() => {
+    dispatch(fetchUser())
+  }, [dispatch])
 
   const handleSearch = () => {
     // Make API request to find property details based on address

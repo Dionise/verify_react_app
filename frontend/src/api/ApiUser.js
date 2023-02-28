@@ -1,8 +1,14 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 export const getUser = async () => {
   try {
+    const token = await AsyncStorage.getItem('token') // Retrieve token from storage
+    console.log(token)
     const response = await fetch('http://127.0.0.1:8000/api/users/me', {
       method: 'GET',
-      credentials: 'include'
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
     const responseData = await response.json()
     if (!response.ok) {

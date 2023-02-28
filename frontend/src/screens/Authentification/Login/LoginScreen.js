@@ -3,7 +3,7 @@ import { View, TextInput, Button, TouchableOpacity, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { resetScreenStyles } from '../Comon.Style.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../../../stores/user.reducer.js'
+import { login } from '../../../stores/user.reducer'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -25,19 +25,14 @@ const LoginScreen = () => {
   }
 
   const handleLogin = () => {
-    dispatch(login({ email, password }))
-      .then(response => {
-        if (response.payload.token) {
-          navigation.navigate('Search')
-        } else {
-          // Display error message to user
-          setErrorMessage('Invalid email or password')
-        }
-      })
-      .catch(error => {
-        // Display error message to user
+    dispatch(login({ email, password })).then(response => {
+      console.log(response)
+      if (response.payload.access) {
+        navigation.navigate('Search')
+      } else {
         setErrorMessage('Invalid email or password')
-      })
+      }
+    })
   }
 
   return (
