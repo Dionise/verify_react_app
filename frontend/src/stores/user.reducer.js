@@ -17,7 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const fetchUser = createAsyncThunk('users/me', async () => {
   const response = await getUser()
-  return response.data
+
+  return response
 })
 
 export const register = createAsyncThunk(
@@ -54,22 +55,23 @@ export const register = createAsyncThunk(
 )
 
 export const login = createAsyncThunk(
-  'users/login/',
+  'users/login',
   async ({ email, password }, thunkAPI) => {
     try {
       const response = await loginUser(email, password)
-      const token = response.data.access // Retrieve token from response
-      await AsyncStorage.setItem('token', token) // Store token in AsyncStorage
-      return token // Return token as part of the action payload
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.message)
+      const token = response.access
+      await AsyncStorage.setItem('token', token)
+      return response
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message)
     }
   }
 )
 
-export const logout = createAsyncThunk('users/logout/', async thunkAPI => {
+export const logout = createAsyncThunk('users/logout/', async (_, thunkAPI) => {
   try {
     const response = await logoutUser()
+    await AsyncStorage.removeItem('token')
     return response
   } catch (err) {
     return thunkAPI.rejectWithValue(err.message)
@@ -91,8 +93,6 @@ export const checkAuth = createAsyncThunk(
 export const sendResetPassword = createAsyncThunk(
   'users/sendResetPassword/',
   async ({ email }, thunkAPI) => {
-    console.log(email)
-    console.log('okoko')
     try {
       const response = await resetPassword(email)
       return response
@@ -117,63 +117,58 @@ export const resetPasswordConfirmation = createAsyncThunk(
 const userAdapter = createEntityAdapter()
 const userSlice = createSlice({
   name: 'user',
-  initialState: userAdapter.getInitialState({
-    isLoading: false,
-    isAuthenticated: false,
-    user: null,
-    loading: false,
-    registered: false,
-    error: null,
-    token: null
-  }),
+  initialState: {
+    auth: {
+      isLoading: false,
+      isAuthenticated: false,
+      user: null,
+      loading: false,
+      registered: false,
+      error: null,
+      token: null
+    }
+  },
   reducers: {
     resetRegistered: state => {
-      state.registered = false
+      state.auth.registered = false
     }
   },
   extraReducers: builder => {
     builder
-      // Add this case to handle the `fetchUser` action
-      .addCase(
-        (fetchUser.fulfilled = (state, action) => {
-          state.user = action.payload
-          state.loading = false
-          state.error = null
-        })
-      )
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.auth.user = action.payload
+        state.auth.isAuthenticated = true
+      })
       .addCase(register.pending, state => {
-        state.loading = true
+        state.auth.loading = true
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.loading = false
-        state.registered = true
-        state.user = action.payload
-        state.isAuthenticated = true
+        state.auth.loading = false
+        state.auth.registered = true
+        state.auth.user = action.payload
+        state.auth.isAuthenticated = true
       })
       .addCase(register.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
+        state.auth.loading = false
+        state.auth.error = action.payload
       })
       .addCase(login.pending, state => {
-        state.loading = true
+        state.auth.loading = true
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false
-        if (action.payload && action.payload.access) {
-          state.isAuthenticated = true
-          state.user = action.payload.user
-          state.token = action.payload.access
-        }
+        state.auth.loading = false
+        state.auth.isAuthenticated = true
+        state.auth.user = action.payload.user
+        state.auth.token = action.payload.access
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
+        state.auth.loading = false
+        state.auth.error = action.payload
       })
   }
 })
 
-export const selectAuthState = state => state.user.isAuthenticated
-export const selectUser = state => state.user
-export const { selectAll } = userAdapter.getSelectors(state => state.user)
+export const selectAuthState = state => state.user.auth.isAuthenticated
+export const selectUser = state => state.user.auth.user
 
 export default userSlice.reducer

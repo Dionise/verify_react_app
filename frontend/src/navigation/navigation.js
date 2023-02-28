@@ -16,9 +16,8 @@ import FavoriteScreen from '../screens/Favorite/FavoriteScreen.js'
 import { Button } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-
-import CustomDrawerContent from '../components/drawer/drawer.js'
 import { selectAuthState } from '../stores/user.reducer.js'
+import CustomDrawerContent from '../components/drawer/drawer.js'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -126,20 +125,14 @@ const PropertyDetailsTabs = () => {
 }
 
 const SearchScreenDrawer = () => {
-  const [isLoggedIn, setisLoggedIn] = useState(false)
-
   const authState = useSelector(selectAuthState)
-  const [isSignedIn, setIsSignedIn] = useState(authState.isAuthenticated)
+  const [isSignedIn, setIsSignedIn] = useState(authState)
 
   useEffect(() => {
-    setIsSignedIn(authState.isAuthenticated)
+    setIsSignedIn(authState)
   }, [authState])
 
-  useEffect(() => {
-    setisLoggedIn(isSignedIn)
-  }, [isSignedIn])
-
-  if (isLoggedIn) {
+  if (isSignedIn) {
     return (
       <Drawer.Navigator
         drawerContent={props => <CustomDrawerContent {...props} />}>

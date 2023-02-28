@@ -11,8 +11,6 @@ const LoginScreen = () => {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const [errorMessage, setErrorMessage] = useState(null)
-  const [emailFocused, setEmailFocused] = useState(false)
-  const [passwordFocused, setPasswordFocused] = useState(false)
 
   const handleEmailChange = text => {
     setEmail(text)

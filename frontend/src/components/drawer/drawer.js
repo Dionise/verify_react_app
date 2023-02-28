@@ -1,41 +1,55 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem
 } from '@react-navigation/drawer'
-import { NavigationContainer } from '@react-navigation/native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSelector } from 'react-redux'
+
+import { useDispatch } from 'react-redux'
+import { logout } from '../../stores/user.reducer.js'
 
 const CustomDrawerContent = props => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const authState = useSelector(state => state.user.auth)
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      // Check if the user is logged in
-      //const token = await AsyncStorage.getItem('token')
-      //setIsLoggedIn(token !== null)
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout())
+    } catch (error) {
+      console.log('Logout failed:', error)
     }
-    checkLoginStatus()
-  }, [])
+  }
 
   return (
     <DrawerContentScrollView {...props}>
-      {isLoggedIn ? (
-        <>
-          <DrawerItemList {...props} />
-          <DrawerItem label="Logout" />
-        </>
-      ) : (
-        <DrawerItem
-          label="Login"
-          onPress={() => props.navigation.navigate('Login')}
-        />
-      )}
+      <View style={styles.userInfo}>
+        <Text style={styles.userName}>
+          {authState.user.first_name} {authState.user.last_name}
+        </Text>
+        <Text style={styles.userEmail}>{authState.user.email}</Text>
+      </View>
+
+      <DrawerItem label="Logout" onPress={handleLogout} />
     </DrawerContentScrollView>
   )
 }
+
+const styles = StyleSheet.create({
+  userInfo: {
+    padding: 20
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5
+  },
+  userEmail: {
+    fontSize: 14,
+    color: 'gray'
+  }
+})
 
 export default CustomDrawerContent

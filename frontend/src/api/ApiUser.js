@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const getUser = async () => {
   try {
-    const token = await AsyncStorage.getItem('token') // Retrieve token from storage
-    console.log(token)
+    const token = await AsyncStorage.getItem('token')
+
     const response = await fetch('http://127.0.0.1:8000/api/users/me', {
       method: 'GET',
       headers: {
@@ -15,7 +15,7 @@ export const getUser = async () => {
       const errorData = responseData
       throw new Error(errorData.detail)
     }
-    return responseData
+    return responseData // return responseData object directly
   } catch (error) {
     console.error('Get user request error:', error)
     const errorMessage = error.message || 'Could not get user details'
@@ -105,9 +105,20 @@ export const registerUser = async (firstName, lastName, email, password) => {
 }
 
 export const logoutUser = async () => {
+  const csrfResponse = await fetch(
+    'http://127.0.0.1:8000/api/users/csrf_token/',
+    {
+      credentials: 'include'
+    }
+  )
+
   try {
     const response = await fetch('http://127.0.0.1:8000/api/users/logout/', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfResponse.headers.get('X-CSRFToken')
+      },
       credentials: 'include'
     })
     const responseData = await response.json()
