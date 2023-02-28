@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image, SafeAreaView } from 'react-native'
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -10,6 +10,9 @@ import { useSelector } from 'react-redux'
 
 import { useDispatch } from 'react-redux'
 import { logout } from '../../stores/user.reducer.js'
+
+const avatarIcon =
+  'https://e7.pngegg.com/pngimages/778/849/png-clipart-computer-icons-user-login-avatar-small-icons-angle-heroes.png'
 
 const CustomDrawerContent = props => {
   const authState = useSelector(state => state.user.auth)
@@ -24,27 +27,54 @@ const CustomDrawerContent = props => {
   }
 
   return (
-    <DrawerContentScrollView {...props}>
-      <View style={styles.userInfo}>
-        <Text style={styles.userName}>
-          {authState.user.first_name} {authState.user.last_name}
-        </Text>
-        <Text style={styles.userEmail}>{authState.user.email}</Text>
-      </View>
-
-      <DrawerItem label="Logout" onPress={handleLogout} />
-    </DrawerContentScrollView>
+    <SafeAreaView style={styles.container}>
+      <DrawerContentScrollView {...props}>
+        <View style={styles.userInfo}>
+          <Image source={avatarIcon} style={styles.avatar} />
+          <View style={styles.nameContainer}>
+            <Text style={styles.userName}>{authState.user.first_name}</Text>
+            <View style={styles.nameSeparator} />
+            <Text style={styles.userName}>{authState.user.last_name}</Text>
+          </View>
+          <Text style={styles.userEmail}>{authState.user.email}</Text>
+        </View>
+        <DrawerItem label="Logout" onPress={handleLogout} />
+      </DrawerContentScrollView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  drawer: {
+    backgroundColor: '#fff',
+    paddingTop: 20
+  },
   userInfo: {
-    padding: 20
+    alignItems: 'center',
+    marginBottom: 30
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10
+  },
+  nameContainer: {
+    flexDirection: 'row'
   },
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5
+    marginRight: 5
+  },
+  nameSeparator: {
+    width: 2,
+    height: '100%',
+    backgroundColor: 'gray',
+    marginHorizontal: 5
   },
   userEmail: {
     fontSize: 14,

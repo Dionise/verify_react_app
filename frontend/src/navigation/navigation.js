@@ -18,7 +18,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { selectAuthState } from '../stores/user.reducer.js'
 import CustomDrawerContent from '../components/drawer/drawer.js'
-
+import { useWindowDimensions } from 'react-native'
+import { navigationStyles } from './style'
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -127,6 +128,8 @@ const PropertyDetailsTabs = () => {
 const SearchScreenDrawer = () => {
   const authState = useSelector(selectAuthState)
   const [isSignedIn, setIsSignedIn] = useState(authState)
+  const dimensions = useWindowDimensions()
+  const drawerWidth = dimensions.width * 0.3
 
   useEffect(() => {
     setIsSignedIn(authState)
@@ -135,6 +138,7 @@ const SearchScreenDrawer = () => {
   if (isSignedIn) {
     return (
       <Drawer.Navigator
+        drawerStyle={[navigationStyles.drawer, { width: drawerWidth }]}
         drawerContent={props => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name="SearchScreen" component={SearchScreen} />
       </Drawer.Navigator>

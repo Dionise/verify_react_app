@@ -63,14 +63,7 @@ const SearchScreen = () => {
         <Text style={searchScreenStyles.favoriteText}>Favorite</Text>
       </TouchableOpacity>
 
-      {isAuthenticated ? (
-        <View>
-          <View style={{ marginTop: 20, marginLeft: 10 }}>
-            <Text style={{ fontSize: 16 }}>{user.name}</Text>
-            <Text style={{ fontSize: 12, color: 'gray' }}>{user.email}</Text>
-          </View>
-        </View>
-      ) : (
+      {isAuthenticated ? null : (
         <TouchableOpacity
           style={searchScreenStyles.loginIcon}
           onPress={() => navigation.navigate('Auth', { screen: 'Login' })}>
