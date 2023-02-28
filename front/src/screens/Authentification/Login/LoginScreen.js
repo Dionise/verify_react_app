@@ -3,7 +3,7 @@ import { View, TextInput, Button, TouchableOpacity, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { resetScreenStyles } from '../Comon.Style.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../../../stores/user.reducer.js'
+import { login } from '../../../../../frontend/src/stores/user.reducer.js'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')

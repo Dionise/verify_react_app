@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   Text,
@@ -6,11 +6,13 @@ import {
   TextInput,
   Button,
   TouchableHighlight,
-  Image
+  Image,
+  Platform,
+  PermissionsIOS
 } from 'react-native'
 import { useRoute } from '@react-navigation/native'
-import { notesScreenStyles } from './notesScreenStyles.js'
-import ImagePicker from 'react-native-image-picker'
+
+import { notesScreenStyles } from './notesScreenStyles'
 
 const NotesScreen = () => {
   const [notes, setNotes] = useState([])
@@ -25,29 +27,6 @@ const NotesScreen = () => {
     setNotes([...notes, newNoteObj])
     setNewNote('')
     setImage(null)
-  }
-
-  const pickImage = () => {
-    const options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images'
-      }
-    }
-
-    ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker')
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton)
-      } else {
-        const source = { uri: response.uri }
-        setImage(source)
-      }
-    })
   }
 
   return (
@@ -73,13 +52,9 @@ const NotesScreen = () => {
           value={newNote}
           placeholder="Add note"
         />
-        <TouchableHighlight
-          style={notesScreenStyles.button}
-          onPress={pickImage}>
-          <Text style={notesScreenStyles.buttonText}>Add Image</Text>
-        </TouchableHighlight>
+
         <Button title="Add note" onPress={handleAddNote} />
-        {image && <Image source={image} style={styles.image} />}
+        {image && <Image source={image} style={notesScreenStyles.image} />}
       </View>
     </View>
   )
