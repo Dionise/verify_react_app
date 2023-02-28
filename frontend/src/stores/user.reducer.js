@@ -129,10 +129,6 @@ const userSlice = createSlice({
   reducers: {
     resetRegistered: state => {
       state.registered = false
-    },
-    logout(state) {
-      state.currentUser = null
-      AsyncStorage.removeItem('token') // Remove token from AsyncStorage on logout
     }
   },
   extraReducers: builder => {
@@ -163,9 +159,11 @@ const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false
-        state.isAuthenticated = true
-        state.user = action.payload.user
-        state.token = action.payload.access
+        if (action.payload && action.payload.access) {
+          state.isAuthenticated = true
+          state.user = action.payload.user
+          state.token = action.payload.access
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false
@@ -173,6 +171,8 @@ const userSlice = createSlice({
       })
   }
 })
+
+export const selectAuthState = state => state.user.isAuthenticated
 export const selectUser = state => state.user
 export const { selectAll } = userAdapter.getSelectors(state => state.user)
 

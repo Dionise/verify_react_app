@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import SearchScreen from '../screens/Home/SearchScreen.js'
@@ -14,9 +15,14 @@ import SplashScreen from '../screens/SplashScreen/SplashScreen.js'
 import FavoriteScreen from '../screens/Favorite/FavoriteScreen.js'
 import { Button } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+
+import CustomDrawerContent from '../components/drawer/drawer.js'
+import { selectAuthState } from '../stores/user.reducer.js'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
+const Drawer = createDrawerNavigator()
 
 const AuthStack = () => {
   return (
@@ -119,6 +125,32 @@ const PropertyDetailsTabs = () => {
   )
 }
 
+const SearchScreenDrawer = () => {
+  const [isLoggedIn, setisLoggedIn] = useState(false)
+
+  const authState = useSelector(selectAuthState)
+  const [isSignedIn, setIsSignedIn] = useState(authState.isAuthenticated)
+
+  useEffect(() => {
+    setIsSignedIn(authState.isAuthenticated)
+  }, [authState])
+
+  useEffect(() => {
+    setisLoggedIn(isSignedIn)
+  }, [isSignedIn])
+
+  if (isLoggedIn) {
+    return (
+      <Drawer.Navigator
+        drawerContent={props => <CustomDrawerContent {...props} />}>
+        <Drawer.Screen name="SearchScreen" component={SearchScreen} />
+      </Drawer.Navigator>
+    )
+  } else {
+    return <SearchScreen />
+  }
+}
+
 const MainNavigation = () => {
   return (
     <NavigationContainer>
@@ -148,7 +180,7 @@ const MainNavigation = () => {
         />
         <Stack.Screen
           name="Search"
-          component={SearchScreen}
+          component={SearchScreenDrawer}
           options={{ headerShown: false, tabBarVisible: false }}
         />
         <Stack.Screen name="PropertyDetails" component={PropertyDetailsTabs} />
