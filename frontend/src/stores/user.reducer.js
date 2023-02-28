@@ -33,6 +33,6 @@ const userSlice = createSlice({
   }
 })
 
-export const { selectAll } = userAdapter.getSelectors(state => state.members)
+export const { selectAll } = userAdapter.getSelectors(state => state.user)
 
 export default userSlice.reducer
