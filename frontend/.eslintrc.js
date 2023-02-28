@@ -4,7 +4,7 @@ module.exports = {
   rules: {
     semi: 0,
     eqeqeq: 0,
-    'no-console': 'error',
+    'no-console': 'off',
     'comma-dangle': ['error', 'never']
   }
 }

@@ -11,7 +11,6 @@ export const getUser = async () => {
     }
     return responseData
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Get user request error:', error)
     const errorMessage = error.message || 'Could not get user details'
     throw new Error(errorMessage)
@@ -52,8 +51,6 @@ export const loginUser = async (email, password) => {
 
     return responseData
   } catch (error) {
-    // eslint-disable-next-line no-console
-
     const errorMessage = error.message || 'Login failed'
     throw new Error(errorMessage)
   }
@@ -95,7 +92,6 @@ export const registerUser = async (firstName, lastName, email, password) => {
 
     return responseData
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Registration request error:', error)
     const errorMessage = error.message || 'Registration failed'
     throw new Error(errorMessage)
