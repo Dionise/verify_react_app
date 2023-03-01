@@ -32,12 +32,19 @@ const CustomDrawerContent = props => {
         <View style={styles.userInfo}>
           <Image source={avatarIcon} style={styles.avatar} />
           <View style={styles.nameContainer}>
-            <Text style={styles.userName}>{authState.user.first_name}</Text>
+            <Text style={styles.userName}>
+              {authState.user?.first_name || 'First Name'}
+            </Text>
             <View style={styles.nameSeparator} />
-            <Text style={styles.userName}>{authState.user.last_name}</Text>
+            <Text style={styles.userName}>
+              {authState.user?.last_name || 'Last Name'}
+            </Text>
           </View>
-          <Text style={styles.userEmail}>{authState.user.email}</Text>
+          <Text style={styles.userEmail}>
+            {authState.user?.email || 'Email'}
+          </Text>
         </View>
+
         <DrawerItem label="Logout" onPress={handleLogout} />
       </DrawerContentScrollView>
     </SafeAreaView>
