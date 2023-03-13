@@ -14,7 +14,7 @@ import ResetScreen from '../screens/Authentification/Reset/ResetScreen.js'
 import SplashScreen from '../screens/SplashScreen/SplashScreen.js'
 import FavoriteScreen from '../screens/Favorite/FavoriteScreen.js'
 import { Button } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
+//import Icon from 'react-native-vector-icons/FontAwesome'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { selectAuthState } from '../stores/user.reducer.js'
 import CustomDrawerContent from '../components/drawer/drawer.js'
@@ -77,9 +77,6 @@ const PropertyDetailsTabs = () => {
         name="Property Details"
         component={PropertyDetailsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="home" size={size} color={color} />
-          ),
           headerShown: false,
           headerLeft: props => (
             <HeaderBackButton
@@ -93,9 +90,6 @@ const PropertyDetailsTabs = () => {
         name="Notes"
         component={NotesScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="sticky-note-o" size={size} color={color} />
-          ),
           headerShown: false,
           headerLeft: props => (
             <HeaderBackButton
@@ -109,9 +103,6 @@ const PropertyDetailsTabs = () => {
         name="Documents"
         component={DocumentsScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="file-o" size={size} color={color} />
-          ),
           headerShown: false,
           headerLeft: props => (
             <HeaderBackButton

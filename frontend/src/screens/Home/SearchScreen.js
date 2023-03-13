@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, TextInput, TouchableOpacity, Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -49,17 +48,16 @@ const SearchScreen = () => {
           onChangeText={setAddress}
         />
         <TouchableOpacity onPress={handleSearch}>
-          <Icon name="search" size={24} color="black" />
+          <Text>ok</Text>
         </TouchableOpacity>
       </View>
-
       <TouchableOpacity
         style={[
           searchScreenStyles.favoriteIcon,
           { position: 'absolute', bottom: 40, alignItems: 'center' }
         ]}
         onPress={handleFavorite}>
-        <Icon name="star" size={35} color="black" />
+        <Text>ok</Text>
         <Text style={searchScreenStyles.favoriteText}>Favorite</Text>
       </TouchableOpacity>
 
@@ -67,7 +65,7 @@ const SearchScreen = () => {
         <TouchableOpacity
           style={searchScreenStyles.loginIcon}
           onPress={() => navigation.navigate('Auth', { screen: 'Login' })}>
-          <Icon name="user" size={24} color="black" />
+          <Text>ok</Text>
         </TouchableOpacity>
       )}
     </View>
