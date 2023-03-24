@@ -5,6 +5,7 @@ export const searchScreenStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -39,5 +40,13 @@ export const searchScreenStyles = StyleSheet.create({
     top: '8%',
     right: '8%',
     zIndex: 1,
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  favoriteButtonContainer: {
+    marginTop: 50,
   },
 });

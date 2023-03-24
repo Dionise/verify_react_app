@@ -30,36 +30,32 @@ export const loginUser = async (email, password) => {
       credentials: 'include',
     },
   );
+  const csrfData = await csrfResponse.json();
 
-  // Send the login request with the CSRF token included
-  const body = JSON.stringify({
-    email: email,
-    password: password,
+  const response = await fetch('http://127.0.0.1:8000/api/token/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfData.csrfToken,
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+    credentials: 'include',
   });
+  const responseData = await response.json();
 
-  try {
-    const response = await fetch('http://127.0.0.1:8000/api/token/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfResponse.headers.get('X-CSRFToken'),
-      },
-      body: body,
-      credentials: 'include',
-    });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      const errorData = responseData;
-      throw new Error(errorData.detail);
-    }
-
-    return responseData;
-  } catch (error) {
-    const errorMessage = error.message || 'Login failed';
-    throw new Error(errorMessage);
+  if (!response.ok) {
+    const errorData = responseData;
+    throw new Error(errorData.detail);
   }
+
+  // Return both the access and refresh tokens
+  return {
+    access: responseData.access,
+    refresh: responseData.refresh,
+  };
 };
 
 export const registerUser = async (firstName, lastName, email, password) => {
@@ -105,28 +101,37 @@ export const registerUser = async (firstName, lastName, email, password) => {
 };
 
 export const logoutUser = async () => {
+  const token = await AsyncStorage.getItem('token');
+  const refreshToken = await AsyncStorage.getItem('refreshToken');
+  console.log(refreshToken);
+
   const csrfResponse = await fetch(
     'http://127.0.0.1:8000/api/users/csrf_token/',
     {
       credentials: 'include',
     },
   );
+  const csrfData = await csrfResponse.json();
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/users/logout/', {
+    const response = await fetch('http://127.0.0.1:8000/api/users/logout', {
       method: 'POST',
       headers: {
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-        'X-CSRFToken': csrfResponse.headers.get('X-CSRFToken'),
+        'X-CSRFToken': csrfData.csrfToken,
       },
       credentials: 'include',
+      body: JSON.stringify({refreshtoken: refreshToken}),
     });
-    const responseData = await response.json();
+
+    const responseData = await response.text();
     if (!response.ok) {
       const errorData = responseData;
       throw new Error(errorData.detail);
     }
-    return responseData;
+    const jsonData = responseData ? JSON.parse(responseData) : null;
+    return jsonData;
   } catch (error) {
     console.error('Logout request error:', error);
     const errorMessage = error.message || 'Logout failed';

@@ -1,18 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  Text,
-  FlatList,
-  Button,
-  Image,
-} from 'react-native';
-
+import {View, TextInput, TouchableOpacity, Text, FlatList} from 'react-native';
+import {getNotes} from '../../stores/note.slice.js';
 import {useRoute} from '@react-navigation/native';
 
 import {notesScreenStyles} from './notesScreenStyles.js';
-import {checklistStyles} from './checklistStyles.js';
 
 const NotesScreen = () => {
   const [notes, setNotes] = useState([]);
@@ -42,6 +33,7 @@ const NotesScreen = () => {
     newNotes.splice(index, 1);
     setNotes(newNotes);
   };
+
   return (
     <View style={notesScreenStyles.container}>
       <View style={notesScreenStyles.notesContainer}>

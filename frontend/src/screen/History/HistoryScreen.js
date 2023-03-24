@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {getFavorites, deleteFavoriteById} from '../../stores/propriety.reducer';
+import {getHistory} from '../../stores/history.slice.js';
 import {useDispatch, useSelector} from 'react-redux';
 
-const FavoriteScreen = ({navigation}) => {
+const HistoryScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const favorites = useSelector(state => state.propriety.favorites);
 
   useEffect(() => {
-    dispatch(getFavorites());
+    dispatch(getHistory);
   }, [dispatch]);
 
   const handleDeleteFavorite = id => {
@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FavoriteScreen;
+export default HistoryScreen;

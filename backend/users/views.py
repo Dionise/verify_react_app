@@ -9,12 +9,16 @@ from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_GET
 from django.http import JsonResponse
-
+from django.middleware.csrf import get_token
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @require_GET
 @ensure_csrf_cookie
-def csrf_token(request):
-    return JsonResponse({'csrf_token': get_token(request)})
+def get_csrf(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})
+
 
 
 from .serializers import (UserCreateSerializer,
@@ -24,6 +28,27 @@ from .serializers import (UserCreateSerializer,
                           ChangeFullNameSerializer)
 from .models import UserAccount
 User = get_user_model()
+
+
+
+from rest_framework_simplejwt.tokens import RefreshToken
+
+class LogoutView(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def post(self, request):
+        # Invalidate the refresh and access tokens to log the user out
+        try:
+            refresh_token = request.data["refreshtoken"]
+            print(refresh_token)
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception as e:
+            # Log the error message or return an error response
+            pass
+        
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 class RegisterView(APIView):

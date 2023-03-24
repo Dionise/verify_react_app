@@ -1,11 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, SafeAreaView} from 'react-native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
 import {useSelector} from 'react-redux';
 
 import {useDispatch} from 'react-redux';
@@ -15,12 +10,20 @@ const avatarIcon =
   'https://e7.pngegg.com/pngimages/778/849/png-clipart-computer-icons-user-login-avatar-small-icons-angle-heroes.png';
 
 const CustomDrawerContent = props => {
-  const authState = useSelector(state => state.user.auth);
+  const authState = useSelector(state => state.user.isAuthenticated);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!authState) {
+      props.navigation.navigate('Search');
+    }
+  }, [authState]);
 
   const handleLogout = async () => {
     try {
       await dispatch(logout());
+      props.navigation.navigate('Search');
     } catch (error) {
       console.log('Logout failed:', error);
     }
