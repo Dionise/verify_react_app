@@ -1,5 +1,12 @@
 import React, {useRef, useState} from 'react';
-import {View, Text, Button} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Button,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import apiKey from '../apiKey';
@@ -11,9 +18,8 @@ const SearchScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const googlePlacesRef = useRef(null);
-
+  const searchResults = useSelector(state => state.propriety.searchResults);
   const isAuthenticated = useSelector(state => state.user.isAuthenticated);
-  const [inputValue, setInputValue] = useState('');
 
   const fetchPlaceDetails = async place_id => {
     const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${apiKey}&fields=geometry`;
@@ -72,9 +78,7 @@ const SearchScreen = () => {
               )
                 .then(response => {
                   if (response.meta.requestStatus === 'fulfilled') {
-                    googlePlacesRef.current.setAddress;
-                    Text('');
-                    setInputValue('');
+                    googlePlacesRef.current.setAddressText('');
                     navigation.navigate('PropertyDetails', {
                       screen: 'Property Details',
                       params: {
@@ -105,31 +109,55 @@ const SearchScreen = () => {
             textInput: {
               ...searchScreenStyles.textInput,
               backgroundColor: '#F5F5F5',
+              zIndex: 1, // Add this line
             },
             listView: {
               ...searchScreenStyles.listView,
+              zIndex: 0, // Add this line
             },
           }}
           enablePoweredByContainer={false}
           textContentType="addressCityAndState"
         />
-      </View>
-      {inputValue === '' ? (
-        <View style={searchScreenStyles.buttonContainer}>
-          <View style={searchScreenStyles.favoriteButtonContainer}>
-            <Button
-              title="Favorite"
-              onPress={() => navigation.navigate('FavoriteScreen')}
-            />
-          </View>
-          <View style={searchScreenStyles.favoriteButtonContainer}>
-            <Button
-              title="History"
-              onPress={() => navigation.navigate('HistoryScreen')}
-            />
-          </View>
+
+        {/* Render the search results */}
+        <View style={searchScreenStyles.resultsContainer}>
+          {searchResults &&
+            searchResults.map(item => (
+              <TouchableOpacity
+                onPress={() => {
+                  const location = {
+                    latitude: item.latitude,
+                    longitude: item.longitude,
+                  };
+
+                  navigation.navigate('PropertyDetails', {
+                    screen: 'Property Details',
+                    params: {
+                      address: item.address,
+                      details: item.details,
+                      location: location,
+                    },
+                  });
+                }}
+                key={item.id}>
+                <Text>{item.address}</Text>
+              </TouchableOpacity>
+            ))}
         </View>
-      ) : null}
+      </View>
+      <View style={searchScreenStyles.favoriteButtonContainer}>
+        <Button
+          title="Favorite"
+          onPress={() => navigation.navigate('FavoriteScreen')}
+        />
+      </View>
+      <View style={searchScreenStyles.favoriteButtonContainer}>
+        <Button
+          title="History"
+          onPress={() => navigation.navigate('HistoryScreen')}
+        />
+      </View>
     </View>
   );
 };

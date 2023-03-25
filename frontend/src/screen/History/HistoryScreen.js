@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {getHistory} from '../../stores/history.slice.js';
+import {getFavorites, deleteFavoriteById} from '../../stores/propriety.reducer';
 import {useDispatch, useSelector} from 'react-redux';
 
 const HistoryScreen = ({navigation}) => {
@@ -16,7 +16,7 @@ const HistoryScreen = ({navigation}) => {
   const favorites = useSelector(state => state.propriety.favorites);
 
   useEffect(() => {
-    dispatch(getHistory);
+    dispatch(getFavorites());
   }, [dispatch]);
 
   const handleDeleteFavorite = id => {

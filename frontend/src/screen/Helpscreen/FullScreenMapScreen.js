@@ -1,11 +1,27 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
 const FullScreenMapScreen = ({navigation, route}) => {
   const {location} = route.params;
 
   const [mapType, setMapType] = useState('standard');
+
+  const [currentLocation, setCurrentLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0.09,
+    longitudeDelta: 0.09,
+  });
+
+  useEffect(() => {
+    setCurrentLocation({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.09,
+      longitudeDelta: 0.09,
+    });
+  }, [location]);
 
   const changeMapType = () => {
     switch (mapType) {
@@ -23,8 +39,13 @@ const FullScreenMapScreen = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={location} mapType={mapType}>
-        <Marker coordinate={location} />
+      <MapView style={styles.map} region={currentLocation} mapType={mapType}>
+        <Marker coordinate={currentLocation}>
+          <Image
+            source={require('../../assets/images/marker.jpg')}
+            style={{height: 45, width: 35}}
+          />
+        </Marker>
       </MapView>
       <TouchableOpacity
         style={styles.goBackButton}

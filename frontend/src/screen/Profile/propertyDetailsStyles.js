@@ -1,10 +1,8 @@
 import {StyleSheet} from 'react-native';
 
 export const propertyDetailsStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
+  container: {backgroundColor: 'white'},
+
   addressButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -39,21 +37,38 @@ export const propertyDetailsStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  descriptionContainer: {
-    marginTop: 20,
-    marginBottom: 20,
-  },
+
   description: {
-    fontSize: 16,
+    fontSize: 22,
     marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  text: {
+    fontSize: 14,
+    marginBottom: 5,
   },
   mapContainer: {
     flex: 1,
     height: 200,
+    borderRadius: 10,
+  },
+
+  descriptionContainer: {
+    flex: 1,
     marginTop: 20,
     borderRadius: 10,
     overflow: 'hidden',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
   },
+  rentmortgage: {
+    backgroundColor: '#F5F5F5',
+    alignSelf: 'stretch',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+
   map: {
     flex: 1,
   },

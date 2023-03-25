@@ -133,6 +133,7 @@ class HistoryListAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        
         user = self.request.user
         return History.objects.filter(user=user)
 

@@ -16,6 +16,8 @@ import FavoriteScreen from '../screen/Favorite/FavoriteScreen.js';
 import HistoryScreen from '../screen/History/HistoryScreen.js';
 import {Button, Text, StyleSheet} from 'react-native';
 import FullScreenMapScreen from '../screen/Helpscreen/FullScreenMapScreen.js';
+import SettingsScreen from '../screen/Settings/SettingsScreen.js';
+
 //import Icon from 'react-native-vector-icons/FontAwesome'
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {selectAuthState} from '../stores/user.reducer.js';
@@ -82,7 +84,7 @@ const PropertyDetailsTabs = () => {
         },
       }}>
       <Tab.Screen
-        name="Property Details"
+        name="Home"
         component={PropertyDetailsScreen}
         options={{
           headerShown: false,
@@ -97,6 +99,20 @@ const PropertyDetailsTabs = () => {
       <Tab.Screen
         name="Notes"
         component={NotesScreen}
+        options={{
+          headerShown: false,
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => props.navigation.navigate('Search')}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={{
           headerShown: false,
           headerLeft: props => (
