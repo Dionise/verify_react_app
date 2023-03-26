@@ -1,29 +1,30 @@
 import React, {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SearchScreen from '../screen/Home/SearchScreen.js';
 import PropertyDetailsScreen from '../screen/Profile/PropertyDetailsScreen.js';
-import NotesScreen from '../screen/Note/NotesScreen.js';
-import DocumentsScreen from '../screen/Documents/DocumentsScreen.js';
+import GeneralViewScreen from '../screen/Note/GeneralViewScreen.js';
 import {NavigationContainer} from '@react-navigation/native';
 import {HeaderBackButton} from '@react-navigation/stack';
+import SettingsScreen from '../screen/Settings/SettingsScreen.js';
 import RegisterScreen from '../screen/Authentification/Register/RegisterScreen.js';
 import LoginScreen from '../screen/Authentification/Login/LoginScreen.js';
 import ResetScreen from '../screen/Authentification/Reset/ResetScreen.js';
 import SplashScreen from '../screen/SplashScreen/SplashScreen.js';
 import FavoriteScreen from '../screen/Favorite/FavoriteScreen.js';
-import HistoryScreen from '../screen/History/HistoryScreen.js';
-import {Button, Text, StyleSheet} from 'react-native';
+import AccountAccessScreen from '../screen/AccountAccess/AccountAccessScreen.js';
+import AccountPreferenceScreen from '../screen/AccountPreference/AccountPreferenceScreen.js';
+import CheckListScreen from '../screen/Note/CheckList/CheckListScreen.js';
+import {Button, Text, View} from 'react-native';
 import FullScreenMapScreen from '../screen/Helpscreen/FullScreenMapScreen.js';
-import SettingsScreen from '../screen/Settings/SettingsScreen.js';
-
-//import Icon from 'react-native-vector-icons/FontAwesome'
+import AddNote from '../screen/Note/AddNote/AddNoteScreen.js';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {selectAuthState} from '../stores/user.reducer.js';
 import CustomDrawerContent from '../components/drawer/drawer.js';
 import {useWindowDimensions} from 'react-native';
 import {navigationStyles} from './style';
+
+import {useSelector} from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -77,12 +78,20 @@ const AuthStack = () => {
 
 const PropertyDetailsTabs = () => {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        style: {
-          borderTopWidth: 0,
-        },
-      }}>
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Notes"
+        component={GeneralViewScreen}
+        options={{
+          headerShown: false,
+          headerLeft: props => (
+            <HeaderBackButton
+              {...props}
+              onPress={() => props.navigation.navigate('Search')}
+            />
+          ),
+        }}
+      />
       <Tab.Screen
         name="Home"
         component={PropertyDetailsScreen}
@@ -97,23 +106,10 @@ const PropertyDetailsTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Notes"
-        component={NotesScreen}
-        options={{
-          headerShown: false,
-          headerLeft: props => (
-            <HeaderBackButton
-              {...props}
-              onPress={() => props.navigation.navigate('Search')}
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen
-        name="Settings"
+        name="SettingsScreen"
         component={SettingsScreen}
         options={{
+          title: 'Settings',
           headerShown: false,
           headerLeft: props => (
             <HeaderBackButton
@@ -140,30 +136,16 @@ const SearchScreenDrawer = () => {
   if (isSignedIn) {
     return (
       <Drawer.Navigator
-        tabBarOptions={{
-          style: {
-            borderTopWidth: 0,
-            backgroundColor: 'transparent',
-            borderBottomWidth: 0,
-          },
-        }}
         drawerStyle={[navigationStyles.drawer, {width: drawerWidth}]}
         drawerContent={props => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen
-          options={{
-            title: '',
-            headerStyle: styles.header,
-          }}
-          name="SearchScreen"
-          component={SearchScreen}
-        />
+        <Drawer.Screen name="SearchScreen" component={SearchScreen} />
       </Drawer.Navigator>
     );
   } else {
     return <SearchScreen />;
   }
 };
-
+//NoteScreenOptionScreen
 const MainNavigation = () => {
   return (
     <NavigationContainer>
@@ -173,6 +155,29 @@ const MainNavigation = () => {
           component={FullScreenMapScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="AccountAccessScreen"
+          component={AccountAccessScreen}
+          options={{title: ''}}
+        />
+        <Stack.Screen
+          name="AccountPreferenceScreen"
+          component={AccountPreferenceScreen}
+          options={{title: ''}}
+        />
+
+        <Stack.Screen
+          name="CheckListScreen"
+          component={CheckListScreen}
+          options={{title: '', headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="AddNote"
+          component={AddNote}
+          options={{title: '', headerShown: false}}
+        />
+
         <Stack.Screen
           name="FavoriteScreen"
           component={FavoriteScreen}
@@ -187,20 +192,6 @@ const MainNavigation = () => {
           })}
         />
         <Stack.Screen
-          name="HistoryScreen"
-          component={HistoryScreen}
-          options={({navigation}) => ({
-            headerLeft: () => (
-              <Button
-                title="Back"
-                onPress={() => navigation.navigate('Search')}
-              />
-            ),
-            headerTitle: 'History',
-          })}
-        />
-
-        <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
           options={{headerShown: false}}
@@ -213,24 +204,30 @@ const MainNavigation = () => {
         <Stack.Screen
           name="Search"
           component={SearchScreenDrawer}
-          options={{headerShown: false, tabBarVisible: false, title: ''}}
+          options={{headerShown: false, tabBarVisible: false}}
         />
         <Stack.Screen
           name="PropertyDetails"
           component={PropertyDetailsTabs}
-          options={{title: ''}}
+          options={({navigation}) => ({
+            headerShown: false,
+            headerLeft: () => (
+              <Button
+                title="Back"
+                onPress={() => navigation.navigate('Search')}
+              />
+            ),
+            headerRight: () => (
+              <View>
+                <Text onPress={() => console.log('ok')}>s</Text>
+              </View>
+            ),
+            headerTitle: ' ',
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: 'white',
-    borderBottomWidth: 0,
-    elevation: 0,
-    shadowOpacity: 0,
-  },
-});
 export default MainNavigation;

@@ -1,12 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Button,
-  TextInput,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {View, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import apiKey from '../apiKey';
@@ -64,8 +57,6 @@ const SearchScreen = () => {
                 longitude: details.geometry.location.lng,
               };
 
-              // Dispatch the addpropriety action here with additional parameters
-
               dispatch(
                 addpropriety({
                   location: location,
@@ -79,8 +70,9 @@ const SearchScreen = () => {
                 .then(response => {
                   if (response.meta.requestStatus === 'fulfilled') {
                     googlePlacesRef.current.setAddressText('');
+
                     navigation.navigate('PropertyDetails', {
-                      screen: 'Property Details',
+                      screen: 'Home',
                       params: {
                         address: data.description,
                         details: details,
@@ -119,32 +111,6 @@ const SearchScreen = () => {
           enablePoweredByContainer={false}
           textContentType="addressCityAndState"
         />
-
-        {/* Render the search results */}
-        <View style={searchScreenStyles.resultsContainer}>
-          {searchResults &&
-            searchResults.map(item => (
-              <TouchableOpacity
-                onPress={() => {
-                  const location = {
-                    latitude: item.latitude,
-                    longitude: item.longitude,
-                  };
-
-                  navigation.navigate('PropertyDetails', {
-                    screen: 'Property Details',
-                    params: {
-                      address: item.address,
-                      details: item.details,
-                      location: location,
-                    },
-                  });
-                }}
-                key={item.id}>
-                <Text>{item.address}</Text>
-              </TouchableOpacity>
-            ))}
-        </View>
       </View>
       <View style={searchScreenStyles.favoriteButtonContainer}>
         <Button

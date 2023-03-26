@@ -13,14 +13,15 @@ import Geolocation from '@react-native-community/geolocation';
 import {useDispatch, useSelector} from 'react-redux';
 import {propertyDetailsStyles} from './propertyDetailsStyles';
 import {toggleFavoriteProperty} from '../../stores/propriety.reducer';
-
+import CustomHeaderCommon from 'src/components/CustomHeader/CustomHeaderCommon';
 const PropertyDetailsScreen = ({route, navigation}) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const dispatch = useDispatch();
 
   const is_favorite = useSelector(state => state.propriety.is_favorite);
 
-  const {address, location, place_id} = route.params || {};
+  console.log({is_favorite});
+  const {address, location, place_id} = route.params;
 
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 0,
@@ -118,30 +119,32 @@ const PropertyDetailsScreen = ({route, navigation}) => {
   };
 
   return (
-    <View style={propertyDetailsStyles.container}>
-      <ScrollView>
-        <View style={propertyDetailsStyles.mapContainer}>
-          <MapView
-            scrollEnabled={false}
-            zoomEnabled={false}
-            style={propertyDetailsStyles.map}
-            region={currentLocation}>
-            <Marker coordinate={currentLocation}>
-              <Image
-                source={require('../../assets/images/marker.jpg')}
-                style={{height: 45, width: 35}}
-              />
-            </Marker>
-          </MapView>
-          <TouchableOpacity
-            style={propertyDetailsStyles.mapExpandButton}
-            onPress={toggleMapSize}>
-            <Text style={propertyDetailsStyles.mapExpandButtonText}>
-              {isMapMaximized ? 'Minimize Map' : 'Maximize Map'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {/**<View style={propertyDetailsStyles.addressButtonContainer}>
+    <>
+      <CustomHeaderCommon navigation={navigation} />
+      <View style={propertyDetailsStyles.container}>
+        <ScrollView>
+          <View style={propertyDetailsStyles.mapContainer}>
+            <MapView
+              scrollEnabled={false}
+              zoomEnabled={false}
+              style={propertyDetailsStyles.map}
+              region={currentLocation}>
+              <Marker coordinate={currentLocation}>
+                <Image
+                  source={require('../../assets/images/marker.jpg')}
+                  style={{height: 45, width: 35}}
+                />
+              </Marker>
+            </MapView>
+            <TouchableOpacity
+              style={propertyDetailsStyles.mapExpandButton}
+              onPress={toggleMapSize}>
+              <Text style={propertyDetailsStyles.mapExpandButtonText}>
+                {isMapMaximized ? 'Minimize Map' : 'Maximize Map'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {/**<View style={propertyDetailsStyles.addressButtonContainer}>
           <TouchableOpacity
             onPress={toggleFavorite}
             style={propertyDetailsStyles.favoriteButton}>
@@ -150,88 +153,88 @@ const PropertyDetailsScreen = ({route, navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>  */}
-        <View style={propertyDetailsStyles.descriptionContainer}>
-          <Text style={propertyDetailsStyles.description}>
-            Property Information:
-          </Text>
-          <Text style={propertyDetailsStyles.text}>
-            <Text style={{fontWeight: 'bold'}}>Address</Text>: {address}
-          </Text>
-          <Text style={propertyDetailsStyles.text}>
-            <Text style={{fontWeight: 'bold'}}>City</Text>: Bolton, UK
-          </Text>
-          <Text style={propertyDetailsStyles.text}>
-            <Text style={{fontWeight: 'bold'}}>Legal</Text>: Freehold
-          </Text>
-          <Text style={propertyDetailsStyles.text}>
-            <Text style={{fontWeight: 'bold'}}>Type</Text>: Terraced
-          </Text>
-          <Text style={propertyDetailsStyles.text}>
-            <Text style={{fontWeight: 'bold'}}>Rooms</Text>: 3
-          </Text>
-          <Text style={propertyDetailsStyles.text}>
-            <Text style={{fontWeight: 'bold'}}>Size</Text>: 89 m2 (59 ft2)
-          </Text>
-        </View>
-        <View style={styles.tabs}>
-          <TouchableOpacity
-            style={[styles.tab, isMortgageCalculator ? styles.activeTab : {}]}
-            onPress={() => setIsMortgageCalculator(true)}>
-            <Text style={styles.tabText}>Mortgage</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, !isMortgageCalculator ? styles.activeTab : {}]}
-            onPress={() => setIsMortgageCalculator(false)}>
-            <Text style={styles.tabText}>Rent</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={propertyDetailsStyles.rentmortgage}>
-          <Text>{calculatorType} Calculator:</Text>
-          <Text>Price:</Text>
-          <TextInput
-            value={price}
-            onChangeText={setPrice}
-            keyboardType="numeric"
-            style={{borderWidth: 1, borderColor: 'gray', padding: 5}}
-          />
-          <Text>Deposit (10%):</Text>
-          <TextInput
-            value={deposit}
-            onChangeText={setDeposit}
-            keyboardType="numeric"
-            style={{borderWidth: 1, borderColor: 'gray', padding: 5}}
-          />
-          <Text>Repayment term:</Text>
-          <TextInput
-            value={term}
-            onChangeText={setTerm}
-            keyboardType="numeric"
-            style={{
-              borderWidth: 1,
-              borderColor: 'gray',
-              padding: 5,
-            }}
-          />
-
-          {isMortgageCalculator ? (
-            <Text style={styles.resultText}>
-              Mortgage: £
-              <Text style={styles.resultNumber}>{resultMortgage}</Text> per
-              month
+          <View style={propertyDetailsStyles.descriptionContainer}>
+            <Text style={propertyDetailsStyles.description}>
+              Property Information:
             </Text>
-          ) : (
-            <Text style={styles.resultText}>
-              Rent: £<Text style={styles.resultNumber}>{resultRent}</Text> per
-              year
+            <Text style={propertyDetailsStyles.text}>
+              <Text style={{fontWeight: 'bold'}}>Address</Text>: {address}
             </Text>
-          )}
-        </View>
+            <Text style={propertyDetailsStyles.text}>
+              <Text style={{fontWeight: 'bold'}}>City</Text>: Bolton, UK
+            </Text>
+            <Text style={propertyDetailsStyles.text}>
+              <Text style={{fontWeight: 'bold'}}>Legal</Text>: Freehold
+            </Text>
+            <Text style={propertyDetailsStyles.text}>
+              <Text style={{fontWeight: 'bold'}}>Type</Text>: Terraced
+            </Text>
+            <Text style={propertyDetailsStyles.text}>
+              <Text style={{fontWeight: 'bold'}}>Rooms</Text>: 3
+            </Text>
+            <Text style={propertyDetailsStyles.text}>
+              <Text style={{fontWeight: 'bold'}}>Size</Text>: 89 m2 (59 ft2)
+            </Text>
+          </View>
+          <View style={styles.tabs}>
+            <TouchableOpacity
+              style={[styles.tab, isMortgageCalculator ? styles.activeTab : {}]}
+              onPress={() => setIsMortgageCalculator(true)}>
+              <Text style={styles.tabText}>Mortgage</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.tab,
+                !isMortgageCalculator ? styles.activeTab : {},
+              ]}
+              onPress={() => setIsMortgageCalculator(false)}>
+              <Text style={styles.tabText}>Rent</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={propertyDetailsStyles.rentmortgage}>
+            <Text>{calculatorType} Calculator:</Text>
+            <Text>Price:</Text>
+            <TextInput
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="numeric"
+              style={{borderWidth: 1, borderColor: 'gray', padding: 5}}
+            />
+            <Text>Deposit (10%):</Text>
+            <TextInput
+              value={deposit}
+              onChangeText={setDeposit}
+              keyboardType="numeric"
+              style={{borderWidth: 1, borderColor: 'gray', padding: 5}}
+            />
+            <Text>Repayment term:</Text>
+            <TextInput
+              value={term}
+              onChangeText={setTerm}
+              keyboardType="numeric"
+              style={{
+                borderWidth: 1,
+                borderColor: 'gray',
+                padding: 5,
+              }}
+            />
 
-        <View>
-          <Text>ok</Text>
-        </View>
-      </ScrollView>
-    </View>
+            {isMortgageCalculator ? (
+              <Text style={styles.resultText}>
+                Mortgage: £
+                <Text style={styles.resultNumber}>{resultMortgage}</Text> per
+                month
+              </Text>
+            ) : (
+              <Text style={styles.resultText}>
+                Rent: £<Text style={styles.resultNumber}>{resultRent}</Text> per
+                year
+              </Text>
+            )}
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 
