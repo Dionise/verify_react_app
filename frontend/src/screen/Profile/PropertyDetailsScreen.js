@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {TextInput, Button, Switch, StyleSheet, Image} from 'react-native';
+import {TextInput, StyleSheet, Image} from 'react-native';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
 import MapView, {Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {useDispatch, useSelector} from 'react-redux';
-import {propertyDetailsStyles} from './propertyDetailsStyles';
+
 import {toggleFavoriteProperty} from '../../stores/propriety.reducer';
-import CustomHeaderCommon from 'src/components/CustomHeader/CustomHeaderCommon';
+import CustomHeaderHome from 'src/components/CustomHeader/CustomHeaderHome';
 const PropertyDetailsScreen = ({route, navigation}) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const dispatch = useDispatch();
@@ -97,6 +97,9 @@ const PropertyDetailsScreen = ({route, navigation}) => {
   const [resultMortgage, setResultMortgage] = useState(null);
   const [resultRent, setResultRent] = useState(null);
 
+  {
+  }
+
   useEffect(() => {
     calculateResult();
   }, [price, deposit, term, interestRate]);
@@ -120,14 +123,18 @@ const PropertyDetailsScreen = ({route, navigation}) => {
 
   return (
     <>
-      <CustomHeaderCommon navigation={navigation} />
-      <View style={propertyDetailsStyles.container}>
+      <CustomHeaderHome
+        navigation={navigation}
+        onFavoriteToggle={toggleFavorite}
+        isFavorite={isFavorite}
+      />
+      <View style={styles.container}>
         <ScrollView>
-          <View style={propertyDetailsStyles.mapContainer}>
+          <View style={styles.mapContainer}>
             <MapView
               scrollEnabled={false}
               zoomEnabled={false}
-              style={propertyDetailsStyles.map}
+              style={styles.map}
               region={currentLocation}>
               <Marker coordinate={currentLocation}>
                 <Image
@@ -137,42 +144,31 @@ const PropertyDetailsScreen = ({route, navigation}) => {
               </Marker>
             </MapView>
             <TouchableOpacity
-              style={propertyDetailsStyles.mapExpandButton}
+              style={styles.mapExpandButton}
               onPress={toggleMapSize}>
-              <Text style={propertyDetailsStyles.mapExpandButtonText}>
+              <Text style={styles.mapExpandButtonText}>
                 {isMapMaximized ? 'Minimize Map' : 'Maximize Map'}
               </Text>
             </TouchableOpacity>
           </View>
-          {/**<View style={propertyDetailsStyles.addressButtonContainer}>
-          <TouchableOpacity
-            onPress={toggleFavorite}
-            style={propertyDetailsStyles.favoriteButton}>
-            <Text style={propertyDetailsStyles.favoriteButtonText}>
-              {isFavorite ? 'Unfavorite' : 'Favorite'}
-            </Text>
-          </TouchableOpacity>
-        </View>  */}
-          <View style={propertyDetailsStyles.descriptionContainer}>
-            <Text style={propertyDetailsStyles.description}>
-              Property Information:
-            </Text>
-            <Text style={propertyDetailsStyles.text}>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.description}>Property Information:</Text>
+            <Text style={styles.text}>
               <Text style={{fontWeight: 'bold'}}>Address</Text>: {address}
             </Text>
-            <Text style={propertyDetailsStyles.text}>
+            <Text style={styles.text}>
               <Text style={{fontWeight: 'bold'}}>City</Text>: Bolton, UK
             </Text>
-            <Text style={propertyDetailsStyles.text}>
+            <Text style={styles.text}>
               <Text style={{fontWeight: 'bold'}}>Legal</Text>: Freehold
             </Text>
-            <Text style={propertyDetailsStyles.text}>
+            <Text style={styles.text}>
               <Text style={{fontWeight: 'bold'}}>Type</Text>: Terraced
             </Text>
-            <Text style={propertyDetailsStyles.text}>
+            <Text style={styles.text}>
               <Text style={{fontWeight: 'bold'}}>Rooms</Text>: 3
             </Text>
-            <Text style={propertyDetailsStyles.text}>
+            <Text style={styles.text}>
               <Text style={{fontWeight: 'bold'}}>Size</Text>: 89 m2 (59 ft2)
             </Text>
           </View>
@@ -191,7 +187,7 @@ const PropertyDetailsScreen = ({route, navigation}) => {
               <Text style={styles.tabText}>Rent</Text>
             </TouchableOpacity>
           </View>
-          <View style={propertyDetailsStyles.rentmortgage}>
+          <View style={styles.rentmortgage}>
             <Text>{calculatorType} Calculator:</Text>
             <Text>Price:</Text>
             <TextInput
@@ -268,6 +264,102 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontWeight: 'bold',
+  },
+
+  container: {backgroundColor: 'white', paddingBottom: '25%'},
+
+  addressButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  addressBox: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    maxWidth: 300,
+  },
+  addressText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  favoriteButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 5,
+    padding: 10,
+    minWidth: 100,
+    alignItems: 'center',
+    position: 'absolute',
+    right: 0,
+    marginLeft: 0,
+  },
+  favoriteButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  description: {
+    fontSize: 22,
+    marginBottom: 10,
+    fontWeight: 'bold',
+  },
+  text: {
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  mapContainer: {
+    flex: 1,
+    height: 200,
+    borderRadius: 10,
+  },
+
+  descriptionContainer: {
+    flex: 1,
+    marginTop: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+  },
+  rentmortgage: {
+    backgroundColor: '#F5F5F5',
+    alignSelf: 'stretch',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+
+  map: {
+    flex: 1,
+  },
+  mapExpandButton: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 5,
+    alignSelf: 'flex-end',
+    marginTop: -40,
+    marginRight: 10,
+  },
+  mapExpandButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  additionalInfo: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 

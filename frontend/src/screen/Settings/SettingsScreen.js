@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {TextInput, Button, Switch, StyleSheet, Image} from 'react-native';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import CustomHeaderCommon from 'src/components/CustomHeader/CustomHeaderCommon';
 
 const SettingsScreen = ({route, navigation}) => {
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 25,
     paddingLeft: 80,
-    paddingTop: 40,
+    paddingTop: 10,
     fontWeight: 'bold',
   },
 

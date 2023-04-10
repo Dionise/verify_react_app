@@ -1,18 +1,21 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
-{
-  /** <TouchableOpacity onPress={onSave}>
-        <Text style={styles.save}>Save</Text>
-      </TouchableOpacity> */
-}
-
-const CustomHeaderCommon = ({navigation, onFavoriteToggle, isFavorite}) => {
+const CustomHeaderHome = ({navigation, onFavoriteToggle, isFavorite}) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={() => navigation.navigate('Search')}>
         <Text style={styles.back}>Back</Text>
       </TouchableOpacity>
+      <View style={styles.addressButtonContainer}>
+        <TouchableOpacity
+          onPress={onFavoriteToggle}
+          style={styles.favoriteButton}>
+          <Text style={styles.favoriteButtonText}>
+            {isFavorite ? 'Unfavorite' : 'Favorite'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -40,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomHeaderCommon;
+export default CustomHeaderHome;

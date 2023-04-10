@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useContext} from 'react';
 import {View, Button} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -6,12 +6,15 @@ import apiKey from '../apiKey';
 import {useDispatch, useSelector} from 'react-redux';
 import {searchScreenStyles} from './style';
 import {addpropriety} from '../../stores/propriety.reducer.js';
+import AddressContext from '../../contexts/AddressContext.js';
 
 const SearchScreen = () => {
+  const {setAddressData} = useContext(AddressContext);
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const googlePlacesRef = useRef(null);
-  const searchResults = useSelector(state => state.propriety.searchResults);
+
   const isAuthenticated = useSelector(state => state.user.isAuthenticated);
 
   const fetchPlaceDetails = async place_id => {
@@ -57,6 +60,13 @@ const SearchScreen = () => {
                 longitude: details.geometry.location.lng,
               };
 
+              setAddressData({
+                address: data.description,
+                details: details,
+                location: location,
+                place_id: data.place_id,
+              });
+
               dispatch(
                 addpropriety({
                   location: location,
@@ -96,33 +106,23 @@ const SearchScreen = () => {
             y: 'en',
             components: 'country:uk',
           }}
-          styles={{
-            textInputContainer: searchScreenStyles.textInputContainer,
-            textInput: {
-              ...searchScreenStyles.textInput,
-              backgroundColor: '#F5F5F5',
-              zIndex: 1, // Add this line
-            },
-            listView: {
-              ...searchScreenStyles.listView,
-              zIndex: 0, // Add this line
-            },
-          }}
           enablePoweredByContainer={false}
           textContentType="addressCityAndState"
         />
       </View>
-      <View style={searchScreenStyles.favoriteButtonContainer}>
-        <Button
-          title="Favorite"
-          onPress={() => navigation.navigate('FavoriteScreen')}
-        />
-      </View>
-      <View style={searchScreenStyles.favoriteButtonContainer}>
-        <Button
-          title="History"
-          onPress={() => navigation.navigate('HistoryScreen')}
-        />
+      <View style={searchScreenStyles.ButtonContainer}>
+        <View style={searchScreenStyles.favoriteButtonContainer}>
+          <Button
+            title="Favorite"
+            onPress={() => navigation.navigate('FavoriteScreen')}
+          />
+        </View>
+        <View style={searchScreenStyles.favoriteButtonContainer}>
+          <Button
+            title="History"
+            onPress={() => navigation.navigate('HistoryScreen')}
+          />
+        </View>
       </View>
     </View>
   );

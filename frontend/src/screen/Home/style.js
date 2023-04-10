@@ -5,48 +5,24 @@ export const searchScreenStyles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#F5F5F5',
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'center',
-    width: '90%',
+    width: '80%',
     maxWidth: 500,
-  },
-  textInputContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    borderTopWidth: 0,
-    borderRadius: 5,
-    padding: 0,
-    marginVertical: 10,
-  },
-  textInput: {
-    paddingHorizontal: 10,
-    fontSize: 16,
-  },
-  listView: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    position: 'absolute',
-    top: 50,
-    width: '100%',
-  },
-  loginIcon: {
-    position: 'absolute',
-    top: '8%',
-    right: '8%',
-    zIndex: 1,
   },
 
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  favoriteButtonContainer: {
-    marginTop: 50,
+
+  ButtonContainer: {
+    paddingTop: 20,
+    flex: 'start',
+    flexDirection: 'row',
   },
 });

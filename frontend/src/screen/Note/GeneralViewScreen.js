@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import CustomHeaderCommon from 'src/components/CustomHeader/CustomHeaderCommon';
 
 const GeneralViewScreen = ({navigation}) => {
@@ -54,6 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingBottom: 10,
     paddingRight: 10,
+    backgroundColor: 'white',
   },
   button: {
     backgroundColor: '#4285F4',
@@ -61,6 +68,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginBottom: 10,
+    position: 'absolute',
+    bottom: 60,
+    right: 10,
+    zIndex: 2,
   },
   buttonText: {
     color: '#fff',
@@ -70,9 +81,13 @@ const styles = StyleSheet.create({
   menu: {
     borderRadius: 10,
     position: 'absolute',
-    bottom: '15%',
+    bottom: '20%',
     right: '5%',
     elevation: 5,
+    justifyContent: 'space-around',
+    backgroundColor: '#F5F5F5',
+    borderTopWidth: 2,
+    borderTopColor: '#E5E5E5',
   },
   link: {
     paddingVertical: 10,
